@@ -1,29 +1,30 @@
-'use client';
+"use client";
 import { useState } from 'react';
 import type { RagResponse } from '@/types/api';
 import { askRag } from '@/lib/api/client';
 import ChatMessage from './ChatMessage';
 import MessageInput from './MessageInput';
 import UserMessage from './UserMessage';
-
-type ConversationMessage =
-  | { id: string; role: 'user'; text: string }
-  | { id: string; role: 'assistant'; response: RagResponse };
+import { useChatStore, ConversationMessage } from '@/lib/store/useChatStore';
 
 export default function ChatThread() {
-  const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [loading, setLoading] = useState(false);
-  const [dev, setDev] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // use zustand store for messages and dev flag
+  const messages = useChatStore((s) => s.messages);
+  const addMessage = useChatStore((s) => s.addMessage);
+  const dev = useChatStore((s) => s.dev);
+  const setDev = useChatStore((s) => s.setDev);
   const send = async (query: string) => {
     setError(null);
     const userMsg: ConversationMessage = { id: `u-${Date.now()}`, role: 'user', text: query };
-    setMessages(prev => [...prev, userMsg]);
+    addMessage(userMsg);
     setLoading(true);
     try {
       const result = await askRag({ query, dev });
       const assistantMsg: ConversationMessage = { id: `a-${Date.now()}`, role: 'assistant', response: result };
-      setMessages(prev => [...prev, assistantMsg]);
+      addMessage(assistantMsg);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong while generating the answer.');
       throw e;
