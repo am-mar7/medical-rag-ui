@@ -53,9 +53,9 @@ export default async function DashboardPage({
           ) : (
             queries.map(q => (
               <div key={q.id} className="rounded-lg border border-slate-200 bg-white p-4">
-                <div className="flex items-start justify-between">
-                  <div className="text-sm text-slate-800 font-medium">
-                    <Link href={`/question/${q.id}`} className="underline hover:text-emerald-700">
+                <div className="flex items-start justify-between gap-1">
+                  <div className="text-md text-slate-800 font-medium">
+                    <Link href={`/question/${q.id}`} className="hover:text-emerald-800">
                       {q.query_text}
                     </Link>
                   </div>

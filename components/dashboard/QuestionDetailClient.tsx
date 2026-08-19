@@ -1,4 +1,5 @@
-'use client';
+"use client";
+import Link from 'next/link';
 import { useState } from 'react';
 import EvaluateButton from './EvaluateButton';
 import QuestionTrace from './QuestionTrace';
@@ -100,16 +101,16 @@ export default function QuestionDetailClient({ data, queryId }: { data: any; que
                               >
                                 Open chunk
                               </button>
-                              <a
+                              <Link
                                 href={`#${j.chunk_id}`}
-                                className="text-xs text-slate-500 underline"
+                                className="text-xs text-slate-500 no-underline"
                                 onClick={e => {
                                   e.preventDefault();
                                   openChunk(j.chunk_id);
                                 }}
                               >
                                 Link
-                              </a>
+                              </Link>
                             </div>
                           </div>
                         ))}

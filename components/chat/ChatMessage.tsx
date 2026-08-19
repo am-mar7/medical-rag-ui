@@ -7,6 +7,7 @@ import ConfidenceBadge from './ConfidenceBadge';
 import AbstainedNotice from './AbstainedNotice';
 import CitationMarker from './CitationMarker';
 import SourcesToggle from './SourcesToggle';
+import Link from 'next/link';
 
 function renderAnswer(
   text: string,
@@ -41,14 +42,14 @@ function renderAnswer(
         components={{
           p: ({ children }) => <span>{children}</span>,
           a: ({ href, children }) => (
-            <a
-              href={href}
+            <Link
+              href={href!}
               target="_blank"
               rel="noopener noreferrer"
               className="text-emerald-700 underline"
             >
               {children}
-            </a>
+            </Link>
           ),
         }}
       >
