@@ -9,3 +9,4 @@ body { margin: 0; background: #f8fafc; color: #0f172a; font-family: Arial, Helve
 button, input, textarea { font: inherit; }
 button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
 ::selection { background: #dbeafe; }
+

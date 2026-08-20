@@ -30,9 +30,9 @@ export default function QuestionDetailClient({ data, queryId }: { data: any; que
         <QuestionTrace data={data} openChunkId={openChunkId ?? undefined} />
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 mx-auto max-w-4xl">
         <details
-          className="rounded border border-slate-200 bg-white"
+          className="rounded-lg border border-slate-200 bg-white"
           open={panelOpen}
           onToggle={e => setPanelOpen((e.target as HTMLDetailsElement).open)}
         >
@@ -101,16 +101,6 @@ export default function QuestionDetailClient({ data, queryId }: { data: any; que
                               >
                                 Open chunk
                               </button>
-                              <Link
-                                href={`#${j.chunk_id}`}
-                                className="text-xs text-slate-500 no-underline"
-                                onClick={e => {
-                                  e.preventDefault();
-                                  openChunk(j.chunk_id);
-                                }}
-                              >
-                                Link
-                              </Link>
                             </div>
                           </div>
                         ))}

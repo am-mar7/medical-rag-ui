@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 
 export type ConversationMessage =
   | { id: string; role: 'user'; text: string }
-  | { id: string; role: 'assistant'; response: any };
+  | { id: string; role: 'assistant'; response?: any; isStreaming?: boolean; streamingText?: string };
 
 type ChatState = {
   messages: ConversationMessage[];
@@ -17,11 +17,11 @@ type ChatState = {
 
 export const useChatStore = create<ChatState>()(
   persist(
-    set => ({
+    (set) => ({
       messages: [],
       dev: false,
       setMessages: (m: ConversationMessage[]) => set({ messages: m }),
-      addMessage: (m: ConversationMessage) => set(s => ({ messages: [...s.messages, m] })),
+      addMessage: (m: ConversationMessage) => set((s: ChatState) => ({ messages: [...s.messages, m] })),
       clearMessages: () => set({ messages: [] }),
       setDev: (v: boolean) => set({ dev: v }),
     }),

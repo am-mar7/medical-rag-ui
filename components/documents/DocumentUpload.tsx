@@ -1,14 +1,10 @@
 'use client';
-
 import { useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import type { UploadResponse } from '@/types/api';
-import { ApiError } from '@/types/api';
 import { uploadDocument } from '@/lib/api/client';
 import UploadStatus from './UploadStatus';
 
 export default function DocumentUpload() {
-  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [drag, setDrag] = useState(false);
@@ -34,24 +30,11 @@ export default function DocumentUpload() {
     setError(null);
     setResult(null);
     try {
-      const response = await uploadDocument(file);
-      setResult(response);
+      setResult(await uploadDocument(file));
     } catch (e) {
-      if (e instanceof ApiError) {
-        if (e.status === 401) {
-          router.push('/login');
-          return;
-        }
-        if (e.status === 403) {
-          setError('Access denied. You do not have permission to upload documents.');
-        } else {
-          setError(e.detail || e.message);
-        }
-      } else {
-        setError(
-          e instanceof Error ? e.message : 'Something went wrong while uploading the document.'
-        );
-      }
+      setError(
+        e instanceof Error ? e.message : 'Something went wrong while uploading the document.'
+      );
     } finally {
       setLoading(false);
     }
@@ -61,18 +44,20 @@ export default function DocumentUpload() {
     <div className="min-h-[calc(100vh-4rem)] px-4 py-8 sm:px-6 lg:px-10 md:min-h-screen">
       <div className="mx-auto max-w-3xl">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-950">Upload Documents</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
+            Upload Documents
+          </h1>
           <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
             Submit medical PDF documents for administrative review before ingestion into the medical RAG knowledge base.
           </p>
         </div>
         <div
-          onDragOver={(e) => {
+          onDragOver={e => {
             e.preventDefault();
             setDrag(true);
           }}
           onDragLeave={() => setDrag(false)}
-          onDrop={(e) => {
+          onDrop={e => {
             e.preventDefault();
             setDrag(false);
             select(e.dataTransfer.files?.[0]);
@@ -86,13 +71,15 @@ export default function DocumentUpload() {
             type="file"
             accept="application/pdf,.pdf"
             className="hidden"
-            onChange={(e) => select(e.target.files?.[0])}
+            onChange={e => select(e.target.files?.[0])}
           />
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-xl">
             ↑
           </div>
           <h2 className="mt-4 font-semibold text-slate-900">Drop a PDF here</h2>
-          <p className="mt-1 text-sm text-slate-500">or select a document from your computer</p>
+          <p className="mt-1 text-sm text-slate-500">
+            or select a document from your computer
+          </p>
           <button
             type="button"
             onClick={() => inputRef.current?.click()}

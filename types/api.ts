@@ -1,8 +1,7 @@
-import type { Session, User } from '@supabase/supabase-js';
-
 export interface RagRequest {
   query: string;
   dev?: boolean;
+  personal_context?: string;
 }
 
 export interface Citation {
@@ -32,54 +31,56 @@ export interface RagResponse {
   confidence_label: 'high' | 'medium' | 'low';
   abstained: boolean;
   disclaimer: string;
+  has_personal_info?: boolean;
+  extracted_personal_info?: string;
+  memory_prompt?: string;
 }
-
-export type DocumentStatus =
-  | 'pending_review'
-  | 'queued'
-  | 'processing'
-  | 'completed'
-  | 'rejected'
-  | 'failed';
 
 export interface UploadResponse {
   document_id: string;
   filename: string;
   file_type: string;
-  status: DocumentStatus;
+  status: 'queued';
   message: string;
 }
 
-export interface StatusResponse {
-  document_id: string;
-  filename: string;
-  status: DocumentStatus;
-  total_pages?: number | null;
-  rejection_reason?: string | null;
-  failure_message?: string | null;
+export interface SignUpRequest {
+  email: string;
+  password: string;
+  full_name?: string;
 }
 
-export class ApiError extends Error {
-  status: number;
-  detail: string;
-
-  constructor(status: number, detail: string) {
-    super(detail);
-    this.name = 'ApiError';
-    this.status = status;
-    this.detail = detail;
-  }
+export interface LoginRequest {
+  email: string;
+  password: string;
 }
 
-export interface AuthState {
-  session: Session | null;
-  user: User | null;
-  isAdmin: boolean;
-  loading: boolean;
+export interface UserResponse {
+  user_id: string;
+  email: string;
+  full_name?: string;
+  created_at?: string;
 }
 
-export interface AuthContextValue extends AuthState {
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<{ confirmationRequired: boolean }>;
-  signOut: () => Promise<void>;
+export interface AuthResponse {
+  access_token: string;
+  refresh_token?: string;
+  token_type: string;
+  user: UserResponse;
+}
+
+export interface SaveMemoryRequest {
+  memory_text: string;
+}
+
+export interface MemoryItem {
+  id: string;
+  user_id: string;
+  memory_text: string;
+  created_at: string;
+}
+
+export interface MemoryListResponse {
+  memories: MemoryItem[];
+  concatenated_context: string;
 }

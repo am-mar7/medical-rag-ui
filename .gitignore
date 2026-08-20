@@ -4,4 +4,3 @@ out
 .env*.local
 npm-debug.log*
 .DS_Store
-conf.txt

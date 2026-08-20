@@ -15,7 +15,6 @@ function renderAnswer(
   activeChunkId: string | null,
   onHover: (id: string | null) => void
 ) {
-  // Split on citation tokens like [1] but render each non-citation segment as Markdown
   const parts = text.split(/(\[\d+\])/g);
   return parts.map((part, i) => {
     const match = part.match(/^\[(\d+)\]$/);
@@ -34,7 +33,6 @@ function renderAnswer(
       );
     }
 
-    // Render markdown inline — ensure paragraphs render as spans so layout stays inline
     return (
       <ReactMarkdown
         key={i}
@@ -59,27 +57,51 @@ function renderAnswer(
   });
 }
 
-export default function ChatMessage({ response }: { response: RagResponse }) {
+interface ChatMessageProps {
+  response?: RagResponse;
+  isStreaming?: boolean;
+  streamingText?: string;
+}
+
+export default function ChatMessage({ response, isStreaming, streamingText }: ChatMessageProps) {
   const [activeChunkId, setActiveChunkId] = useState<string | null>(null);
+
+  const displayText = isStreaming ? (streamingText || '') : (response?.answer || '');
+  const citations = response?.citations || [];
+
   const answer = useMemo(
-    () => renderAnswer(response.answer, response.citations, activeChunkId, setActiveChunkId),
-    [response.answer, response.citations, activeChunkId]
+    () => renderAnswer(displayText, citations, activeChunkId, setActiveChunkId),
+    [displayText, citations, activeChunkId]
   );
+
   return (
     <article className="border-b border-slate-100 px-4 py-8 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-4xl">
         <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-emerald-700">
           Assistant
         </div>
-        {response.abstained && <AbstainedNotice />}
+        {response?.abstained && <AbstainedNotice />}
 
         <div className="mb-4 flex items-start gap-3">
           <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50 text-emerald-700 text-sm font-semibold">
             AI
           </div>
-          <div className="whitespace-pre-wrap text-[15px] leading-7 text-slate-800">{answer}</div>
+          <div className="whitespace-pre-wrap text-[15px] leading-7 text-slate-800">
+            {displayText ? (
+              <>
+                {answer}
+                {isStreaming && (
+                  <span className="inline-block w-1.5 h-4 ml-0.5 bg-emerald-500 animate-pulse align-middle" />
+                )}
+              </>
+            ) : isStreaming ? (
+              <span className="text-slate-400 italic animate-pulse">
+                Reviewing evidence…
+              </span>
+            ) : null}
+          </div>
         </div>
-        {response.citations.length > 0 && (
+        {response && response.citations.length > 0 && (
           <div className="mt-4">
             <SourcesToggle
               citations={response.citations}
@@ -95,3 +117,4 @@ export default function ChatMessage({ response }: { response: RagResponse }) {
     </article>
   );
 }
+
