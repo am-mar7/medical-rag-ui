@@ -5,20 +5,27 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 
-export default function AppShell({ children }: { children: React.ReactNode }) {
+export default function AppShell({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const { user, isAdmin, signOut } = useAuth();
 
   const isAuthPage = pathname === '/login' || pathname === '/register';
+
   if (isAuthPage) {
     return <div className="min-h-screen bg-slate-50">{children}</div>;
   }
 
-  const active = (path: string) => pathname === path || pathname.startsWith(`${path}/`);
+  const active = (path: string) =>
+    pathname === path || pathname.startsWith(`${path}/`);
 
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Mobile Header */}
       <header className="fixed inset-x-0 top-0 z-30 flex h-16 items-center border-b border-slate-200 bg-white/95 px-4 backdrop-blur md:hidden">
         <button
           aria-label="Open navigation"
@@ -27,12 +34,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         >
           ☰
         </button>
+
         <div>
           <div className="font-semibold text-slate-900">Medical RAG</div>
-          <div className="text-xs text-slate-500">Evidence-grounded assistant</div>
+          <div className="text-xs text-slate-500">
+            Evidence-grounded assistant
+          </div>
         </div>
       </header>
 
+      {/* Mobile Overlay */}
       {open && (
         <button
           aria-label="Close navigation"
@@ -41,16 +52,23 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         />
       )}
 
+      {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-slate-200 bg-white transition-transform md:translate-x-0 ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
+        {/* Logo */}
         <div className="flex h-20 items-center border-b border-slate-100 px-6">
           <div>
-            <div className="font-semibold tracking-tight text-slate-950">Medical RAG</div>
-            <div className="mt-0.5 text-xs text-slate-500">Evidence-grounded assistant</div>
+            <div className="font-semibold tracking-tight text-slate-950">
+              Medical RAG
+            </div>
+            <div className="mt-0.5 text-xs text-slate-500">
+              Evidence-grounded assistant
+            </div>
           </div>
+
           <button
             aria-label="Close navigation"
             onClick={() => setOpen(false)}
@@ -60,6 +78,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </button>
         </div>
 
+        {/* Navigation */}
         <nav className="space-y-2 p-4" aria-label="Main navigation">
           <NavItem
             href="/chat"
@@ -68,6 +87,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             icon="💬"
             label="Chat"
           />
+
+          <NavItem
+            href="/dashboard"
+            active={active('/dashboard')}
+            onClick={() => setOpen(false)}
+            icon="📊"
+            label="Dashboard"
+          />
+
           <NavItem
             href="/upload"
             active={active('/upload')}
@@ -75,6 +103,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             icon="📄"
             label="Upload Documents"
           />
+
           {isAdmin && (
             <NavItem
               href="/admin/documents"
@@ -86,11 +115,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           )}
         </nav>
 
+        {/* User / Footer */}
         <div className="mt-auto border-t border-slate-100 p-4">
           {user && (
             <div className="mb-3 rounded-xl border border-slate-100 bg-slate-50 p-3">
               <div className="flex items-center justify-between">
-                <div className="truncate text-xs font-medium text-slate-900">{user.email}</div>
+                <div className="truncate text-xs font-medium text-slate-900">
+                  {user.email}
+                </div>
+
                 <span
                   className={`ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${
                     isAdmin
@@ -109,7 +142,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             onClick={() => void signOut()}
             className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-2.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-slate-900"
           >
-            <span>🚪</span> Sign out
+            <span>🚪</span>
+            Sign out
           </button>
 
           <div className="mt-3 text-[11px] leading-4 text-slate-400">
@@ -118,7 +152,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      <main className="min-h-screen pt-16 md:ml-72 md:pt-0">{children}</main>
+      {/* Main Content */}
+      <main className="min-h-screen pt-16 md:ml-72 md:pt-0">
+        {children}
+      </main>
     </div>
   );
 }
