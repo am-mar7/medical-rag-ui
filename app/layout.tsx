@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import AppShell from '@/components/layout/AppShell';
+import { AuthProvider } from '@/components/auth/AuthProvider';
+import { AuthGate } from '@/components/auth/AuthGate';
 
 export const metadata: Metadata = {
   title: 'Medical RAG Assistant',
@@ -11,7 +13,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
-        <AppShell>{children}</AppShell>
+        <AuthProvider>
+          <AuthGate>
+            <AppShell>{children}</AppShell>
+          </AuthGate>
+        </AuthProvider>
       </body>
     </html>
   );

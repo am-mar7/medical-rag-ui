@@ -1,16 +1,21 @@
 'use client';
+
 import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { UploadResponse } from '@/types/api';
+import { ApiError } from '@/types/api';
 import { uploadDocument } from '@/lib/api/client';
 import UploadStatus from './UploadStatus';
 
 export default function DocumentUpload() {
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [drag, setDrag] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<UploadResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+
   const select = (candidate: File | undefined) => {
     if (!candidate) return;
     setResult(null);
@@ -22,49 +27,66 @@ export default function DocumentUpload() {
     }
     setFile(candidate);
   };
+
   const submit = async () => {
     if (!file || loading) return;
     setLoading(true);
     setError(null);
     setResult(null);
     try {
-      setResult(await uploadDocument(file));
+      const response = await uploadDocument(file);
+      setResult(response);
     } catch (e) {
-      setError(
-        e instanceof Error ? e.message : 'Something went wrong while uploading the document.'
-      );
+      if (e instanceof ApiError) {
+        if (e.status === 401) {
+          router.push('/login');
+          return;
+        }
+        if (e.status === 403) {
+          setError('Access denied. You do not have permission to upload documents.');
+        } else {
+          setError(e.detail || e.message);
+        }
+      } else {
+        setError(
+          e instanceof Error ? e.message : 'Something went wrong while uploading the document.'
+        );
+      }
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="min-h-[calc(100vh-4rem)] px-4 py-8 sm:px-6 lg:px-10 md:min-h-screen">
       <div className="mx-auto max-w-3xl">
         <div className="mb-8">
           <h1 className="text-2xl font-semibold tracking-tight text-slate-950">Upload Documents</h1>
           <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
-            Add PDF documents to the knowledge base used by the medical RAG assistant.
+            Submit medical PDF documents for administrative review before ingestion into the medical RAG knowledge base.
           </p>
         </div>
         <div
-          onDragOver={e => {
+          onDragOver={(e) => {
             e.preventDefault();
             setDrag(true);
           }}
           onDragLeave={() => setDrag(false)}
-          onDrop={e => {
+          onDrop={(e) => {
             e.preventDefault();
             setDrag(false);
             select(e.dataTransfer.files?.[0]);
           }}
-          className={`rounded-2xl border-2 border-dashed p-8 text-center transition sm:p-12 ${drag ? 'border-blue-400 bg-blue-50' : 'border-slate-300 bg-white'}`}
+          className={`rounded-2xl border-2 border-dashed p-8 text-center transition sm:p-12 ${
+            drag ? 'border-blue-400 bg-blue-50' : 'border-slate-300 bg-white'
+          }`}
         >
           <input
             ref={inputRef}
             type="file"
             accept="application/pdf,.pdf"
             className="hidden"
-            onChange={e => select(e.target.files?.[0])}
+            onChange={(e) => select(e.target.files?.[0])}
           />
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-xl">
             ↑
