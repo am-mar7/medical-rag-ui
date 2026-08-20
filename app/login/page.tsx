@@ -2,20 +2,14 @@ import type { Metadata } from 'next';
 import LoginForm from '@/components/auth/LoginForm';
 
 export const metadata: Metadata = {
-  title: 'Sign In | Medical RAG Assistant',
-  description: 'Log in to your Medical RAG account',
+  title: 'Sign In | Beats4U Assistant',
+  description: 'Log in to your Beats4U account',
 };
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center p-4 sm:p-6 md:min-h-screen">
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200/80 bg-white/80 p-8 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-900/80 shadow-2xl shadow-slate-200/50 dark:shadow-none">
-        {/* Ambient Gradient Accents */}
-        <div className="pointer-events-none absolute -left-20 -top-20 h-44 w-44 rounded-full bg-blue-500/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-20 -right-20 h-44 w-44 rounded-full bg-emerald-500/10 blur-3xl" />
-
-        <LoginForm />
-      </div>
+    <div className="w-full flex items-center justify-center p-4">
+      <LoginForm />
     </div>
   );
 }

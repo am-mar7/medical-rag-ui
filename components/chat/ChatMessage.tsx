@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { RagResponse } from '@/types/api';
-import ConfidenceBadge from './ConfidenceBadge';
 import AbstainedNotice from './AbstainedNotice';
 import CitationMarker from './CitationMarker';
 import SourcesToggle from './SourcesToggle';
@@ -44,7 +43,7 @@ function renderAnswer(
               href={href!}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-emerald-700 underline"
+              className="text-emerald-600 dark:text-emerald-400 underline font-medium"
             >
               {children}
             </Link>
@@ -75,18 +74,18 @@ export default function ChatMessage({ response, isStreaming, streamingText }: Ch
   );
 
   return (
-    <article className="border-b border-slate-100 px-4 py-8 sm:px-6 lg:px-10">
+    <article className="border-b border-slate-100 dark:border-slate-800/60 px-4 py-6 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-4xl">
-        <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-emerald-700">
+        <div className="mb-2 text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
           Assistant
         </div>
         {response?.abstained && <AbstainedNotice />}
 
         <div className="mb-4 flex items-start gap-3">
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50 text-emerald-700 text-sm font-semibold">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-emerald-200 dark:border-emerald-800/80 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 text-xs font-extrabold shadow-sm">
             AI
           </div>
-          <div className="whitespace-pre-wrap text-[15px] leading-7 text-slate-800">
+          <div className="whitespace-pre-wrap text-[15px] leading-7 text-slate-800 dark:text-slate-100">
             {displayText ? (
               <>
                 {answer}
@@ -95,7 +94,7 @@ export default function ChatMessage({ response, isStreaming, streamingText }: Ch
                 )}
               </>
             ) : isStreaming ? (
-              <span className="text-slate-400 italic animate-pulse">
+              <span className="text-slate-400 dark:text-slate-500 italic animate-pulse">
                 Reviewing evidence…
               </span>
             ) : null}
@@ -117,4 +116,3 @@ export default function ChatMessage({ response, isStreaming, streamingText }: Ch
     </article>
   );
 }
-

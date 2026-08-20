@@ -4,8 +4,8 @@ import AppShell from '@/components/layout/AppShell';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'Medical RAG Assistant',
-  description: 'Evidence-grounded medical Q&A assistant',
+  title: 'Beats4U Assistant',
+  description: 'Cardiovascular Evidence-grounded Q&A assistant',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

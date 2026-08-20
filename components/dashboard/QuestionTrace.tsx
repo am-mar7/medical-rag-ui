@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChevronDown, ChevronRight, FileText, Sparkles, Layers, CheckCircle2, Award } from 'lucide-react';
 
 type Chunk = {
   rank?: number;
@@ -40,12 +39,12 @@ export default function QuestionTrace({ data, openChunkId }: { data: any; openCh
   return (
     <div className="mx-auto max-w-4xl space-y-4">
       {/* Query Summary Card */}
-      <div className="rounded-lg border border-slate-200 bg-white p-4">
-        <div className="text-lg font-semibold text-slate-900">{data.query_text}</div>
-        <div className="mt-1 text-xs text-slate-500">{formattedDate}</div>
-        <div className="mt-3 text-sm text-slate-700">
+      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
+        <div className="text-lg font-bold text-slate-950 dark:text-white">{data.query_text}</div>
+        <div className="mt-1 text-xs text-slate-500 dark:text-slate-400 font-mono">{formattedDate}</div>
+        <div className="mt-3 text-sm text-slate-700 dark:text-slate-300">
           Evidence score:{' '}
-          <span className="font-semibold">
+          <span className="font-bold text-blue-600 dark:text-blue-400">
             {typeof data.evidence_score === 'number' ? data.evidence_score.toFixed(2) : (data.evidence_score ?? 'N/A')}
           </span>
         </div>
@@ -53,33 +52,33 @@ export default function QuestionTrace({ data, openChunkId }: { data: any; openCh
 
       {/* Traces List */}
       {Object.keys(traces).length === 0 ? (
-        <div className="rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-500">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 text-sm text-slate-500 dark:text-slate-400 text-center">
           No traces available.
         </div>
       ) : (
         Object.entries(traces).map(([type, chunks]) => (
-          <div key={type} className="rounded-lg border border-slate-200 bg-white">
+          <div key={type} className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
             <button
               type="button"
               onClick={() => toggleType(type)}
-              className="w-full text-left px-4 py-3 font-medium text-sm flex items-center justify-between"
+              className="w-full text-left px-5 py-3.5 font-semibold text-sm flex items-center justify-between text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition"
             >
               <span className="capitalize">
-                {type.replace('_', ' ')} <span className="text-xs text-slate-500">({chunks.length})</span>
+                {type.replace('_', ' ')} <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">({chunks.length})</span>
               </span>
-              <span className="text-slate-400">{openTypes[type] ? '▾' : '▸'}</span>
+              <span className="text-slate-400 dark:text-slate-500">{openTypes[type] ? '▾' : '▸'}</span>
             </button>
 
             {openTypes[type] && (
-              <div className="divide-y divide-slate-100 px-4 py-2">
+              <div className="divide-y divide-slate-100 dark:divide-slate-800/80 px-5 py-2">
                 {chunks.map((chunk, idx) => (
                   <div key={chunk.chunk_id || idx} id={chunk.chunk_id} className="py-3">
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <div className="text-sm font-medium text-slate-800">
+                        <div className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                           {chunk.filename ? `Document: ${chunk.filename}` : `Chunk ID: ${chunk.chunk_id}`}
                         </div>
-                        <div className="text-xs text-slate-500">
+                        <div className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
                           rank: {chunk.rank ?? idx + 1} • score: {typeof chunk.score === 'number' ? chunk.score.toFixed(3) : (chunk.score ?? '-')}
                         </div>
                       </div>
@@ -87,7 +86,7 @@ export default function QuestionTrace({ data, openChunkId }: { data: any; openCh
                         <button
                           type="button"
                           onClick={() => toggleChunk(chunk.chunk_id)}
-                          className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
+                          className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
                         >
                           {openChunks[chunk.chunk_id] ? 'Hide chunk' : 'View chunk'}
                         </button>
@@ -95,7 +94,7 @@ export default function QuestionTrace({ data, openChunkId }: { data: any; openCh
                     </div>
 
                     {openChunks[chunk.chunk_id] && (
-                      <pre className="mt-3 whitespace-pre-wrap rounded-md border border-slate-100 bg-slate-50 p-3 text-sm text-slate-800 font-mono">
+                      <pre className="mt-3 whitespace-pre-wrap rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-4 text-xs text-slate-800 dark:text-slate-200 font-mono leading-relaxed overflow-x-auto">
                         {chunk.chunk_text}
                       </pre>
                     )}

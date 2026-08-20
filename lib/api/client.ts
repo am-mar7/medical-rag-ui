@@ -10,7 +10,19 @@ import type {
   UserResponse,
 } from '@/types/api';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://52.28.26.147:8000';
+export function getApiUrl(): string {
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return 'http://127.0.0.1:8000';
+    }
+  }
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl && !envUrl.includes('52.28.26.147')) {
+    return envUrl;
+  }
+  return 'http://127.0.0.1:8000';
+}
 
 function getAuthToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -29,6 +41,25 @@ async function parseError(response: Response): Promise<never> {
   throw new Error(message);
 }
 
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 12000): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    return response;
+  } catch (err: any) {
+    if (err.name === 'AbortError') {
+      throw new Error('Request timed out. Please check backend connection at http://127.0.0.1:8000.');
+    }
+    throw err;
+  } finally {
+    clearTimeout(id);
+  }
+}
+
 export async function askRag(payload: RagRequest): Promise<RagResponse> {
   const token = getAuthToken();
   const headers: Record<string, string> = {
@@ -39,7 +70,7 @@ export async function askRag(payload: RagRequest): Promise<RagResponse> {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}/rag`, {
+  const response = await fetchWithTimeout(`${getApiUrl()}/rag`, {
     method: 'POST',
     headers,
     body: JSON.stringify(payload),
@@ -63,7 +94,7 @@ export async function askRagStream(
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}/rag/stream`, {
+  const response = await fetch(`${getApiUrl()}/rag/stream`, {
     method: 'POST',
     headers,
     body: JSON.stringify(payload),
@@ -139,18 +170,18 @@ export async function uploadDocument(file: File): Promise<UploadResponse> {
   const form = new FormData();
   form.append('file', file, file.name);
 
-  const response = await fetch(`${API_URL}/upload`, {
+  const response = await fetchWithTimeout(`${getApiUrl()}/upload`, {
     method: 'POST',
     headers,
     body: form,
-  });
+  }, 60000);
   if (!response.ok) await parseError(response);
   return response.json() as Promise<UploadResponse>;
 }
 
 /* Auth API endpoints */
 export async function signUpApi(payload: SignUpRequest): Promise<AuthResponse> {
-  const response = await fetch(`${API_URL}/auth/signup`, {
+  const response = await fetchWithTimeout(`${getApiUrl()}/auth/signup`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(payload),
@@ -161,7 +192,7 @@ export async function signUpApi(payload: SignUpRequest): Promise<AuthResponse> {
 }
 
 export async function loginApi(payload: LoginRequest): Promise<AuthResponse> {
-  const response = await fetch(`${API_URL}/auth/login`, {
+  const response = await fetchWithTimeout(`${getApiUrl()}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(payload),
@@ -172,7 +203,7 @@ export async function loginApi(payload: LoginRequest): Promise<AuthResponse> {
 }
 
 export async function getMeApi(token: string): Promise<UserResponse> {
-  const response = await fetch(`${API_URL}/auth/me`, {
+  const response = await fetchWithTimeout(`${getApiUrl()}/auth/me`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -186,7 +217,7 @@ export async function getMeApi(token: string): Promise<UserResponse> {
 
 /* Personal Memory API endpoints */
 export async function saveMemoryApi(memoryText: string, token: string): Promise<MemoryItem> {
-  const response = await fetch(`${API_URL}/auth/memory`, {
+  const response = await fetchWithTimeout(`${getApiUrl()}/auth/memory`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -201,7 +232,7 @@ export async function saveMemoryApi(memoryText: string, token: string): Promise<
 }
 
 export async function getMemoriesApi(token: string): Promise<MemoryListResponse> {
-  const response = await fetch(`${API_URL}/auth/memory`, {
+  const response = await fetchWithTimeout(`${getApiUrl()}/auth/memory`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -214,7 +245,7 @@ export async function getMemoriesApi(token: string): Promise<MemoryListResponse>
 }
 
 export async function deleteMemoryApi(memoryId: string, token: string): Promise<void> {
-  const response = await fetch(`${API_URL}/auth/memory/${memoryId}`, {
+  const response = await fetchWithTimeout(`${getApiUrl()}/auth/memory/${memoryId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,

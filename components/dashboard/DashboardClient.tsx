@@ -4,9 +4,6 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import {
   Search,
-  CheckCircle2,
-  AlertTriangle,
-  Clock,
   ChevronRight,
   BarChart3,
   ShieldCheck,
@@ -31,8 +28,7 @@ export default function DashboardClient({ initialQueries }: { initialQueries: Qu
   // Analytics Metrics
   const totalQueries = queries.length;
   const answeredQueries = useMemo(() => queries.filter(q => !q.abstained), [queries]);
-  const abstainedQueries = useMemo(() => queries.filter(q => q.abstained), [queries]);
-  
+
   const answeredRate = totalQueries > 0 
     ? Math.round((answeredQueries.length / totalQueries) * 100) 
     : 0;
@@ -74,15 +70,15 @@ export default function DashboardClient({ initialQueries }: { initialQueries: Qu
   };
 
   return (
-    <div className="min-h-screen p-8 text-slate-900">
+    <div className="min-h-screen p-4 sm:p-8 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Top Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-950 dark:text-white">
               Dashboard — Recent Queries
             </h1>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               Review live telemetry, evidence scores, and query execution traces.
             </p>
           </div>
@@ -90,9 +86,9 @@ export default function DashboardClient({ initialQueries }: { initialQueries: Qu
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition disabled:opacity-50 shadow-sm"
           >
-            <RotateCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-blue-600' : ''}`} />
+            <RotateCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-blue-600 dark:text-blue-400' : ''}`} />
             Refresh Feed
           </button>
         </div>
@@ -100,78 +96,78 @@ export default function DashboardClient({ initialQueries }: { initialQueries: Qu
         {/* KPI Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Card 1: Total Queries */}
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Total Queries
               </span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-blue-100 bg-blue-50 text-blue-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400">
                 <BarChart3 className="w-4 h-4" />
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-slate-900">{totalQueries}</span>
-              <span className="text-xs text-slate-500">logged sessions</span>
+              <span className="text-3xl font-bold text-slate-900 dark:text-white">{totalQueries}</span>
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">logged sessions</span>
             </div>
           </div>
 
           {/* Card 2: System Answer Rate */}
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Answer Rate
               </span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-100 bg-emerald-50 text-emerald-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400">
                 <ShieldCheck className="w-4 h-4" />
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-emerald-700">{answeredRate}%</span>
-              <span className="text-xs text-slate-500">({answeredQueries.length} answered)</span>
+              <span className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{answeredRate}%</span>
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">({answeredQueries.length} answered)</span>
             </div>
           </div>
 
           {/* Card 3: Avg Groundedness */}
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Avg Evidence Score
               </span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-amber-100 bg-amber-50 text-amber-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400">
                 <Zap className="w-4 h-4" />
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-slate-900">{avgEvidenceScore}</span>
-              <span className="text-xs text-slate-500">/ 1.00 threshold</span>
+              <span className="text-3xl font-bold text-slate-900 dark:text-white">{avgEvidenceScore}</span>
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">/ 1.00 threshold</span>
             </div>
           </div>
         </div>
 
         {/* Filter and Search Bar */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-sm">
           {/* Search Input */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
               placeholder="Search query text or keywords..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-4 py-2 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40"
             />
           </div>
 
           {/* Filter Pills */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             {(['all', 'answered', 'abstained'] as const).map(status => (
               <button
                 key={status}
                 onClick={() => setFilterStatus(status)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-semibold capitalize transition ${
+                className={`rounded-xl px-3.5 py-2 text-xs font-semibold capitalize transition ${
                   filterStatus === status
-                    ? 'bg-slate-900 text-white'
-                    : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-sm'
+                    : 'border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
                 }`}
               >
                 {status}
@@ -183,7 +179,7 @@ export default function DashboardClient({ initialQueries }: { initialQueries: Qu
         {/* Queries List */}
         <div className="space-y-3">
           {filteredQueries.length === 0 ? (
-            <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 text-center text-sm text-slate-500 dark:text-slate-400">
               No queries found.
             </div>
           ) : (
@@ -192,32 +188,32 @@ export default function DashboardClient({ initialQueries }: { initialQueries: Qu
               const formattedDate = new Date(q.created_at).toLocaleString();
 
               return (
-                <div key={q.id} className="rounded-xl border border-slate-200 bg-white p-4">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="text-md font-medium text-slate-800">
-                      <Link href={`/question/${q.id}`} className="hover:text-emerald-800 transition-colors">
+                <div key={q.id} className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm transition hover:border-slate-300 dark:hover:border-slate-700">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="text-base font-semibold text-slate-900 dark:text-white">
+                      <Link href={`/question/${q.id}`} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                         {q.query_text}
                       </Link>
                     </div>
-                    <div className="text-xs text-slate-500 shrink-0 font-mono">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 shrink-0 font-mono">
                       {formattedDate}
                     </div>
                   </div>
 
-                  <div className="mt-3 flex items-center justify-between gap-3 text-xs">
+                  <div className="mt-4 flex items-center justify-between gap-3 text-xs">
                     <div className="flex items-center gap-3">
                       <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
                           isAbstained
-                            ? 'border border-rose-200 bg-rose-50 text-rose-700'
-                            : 'border border-emerald-200 bg-emerald-50 text-emerald-700'
+                            ? 'border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300'
+                            : 'border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300'
                         }`}
                       >
                         {isAbstained ? 'Abstained' : 'Answered'}
                       </span>
-                      <span className="text-slate-600">
+                      <span className="text-slate-600 dark:text-slate-400">
                         Evidence score:{' '}
-                        <span className="font-semibold text-slate-800">
+                        <span className="font-bold text-slate-900 dark:text-white">
                           {typeof q.evidence_score === 'number'
                             ? q.evidence_score.toFixed(2)
                             : String(q.evidence_score || '0.00')}
@@ -227,9 +223,9 @@ export default function DashboardClient({ initialQueries }: { initialQueries: Qu
 
                     <Link
                       href={`/question/${q.id}`}
-                      className="inline-flex items-center text-xs font-semibold text-blue-600 hover:text-blue-800"
+                      className="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
                     >
-                      View Trace <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+                      View Trace <ChevronRight className="w-4 h-4 ml-0.5" />
                     </Link>
                   </div>
                 </div>

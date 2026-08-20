@@ -41,14 +41,14 @@ export default function DocumentUpload() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] px-4 py-8 sm:px-6 lg:px-10 md:min-h-screen">
-      <div className="mx-auto max-w-3xl">
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
+    <div className="min-h-[calc(100vh-4rem)] px-4 py-8 sm:px-6 lg:px-10 md:min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+      <div className="mx-auto max-w-3xl space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-950 dark:text-white">
             Upload Documents
           </h1>
-          <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
-            Submit medical PDF documents for administrative review before ingestion into the medical RAG knowledge base.
+          <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500 dark:text-slate-400">
+            Submit medical PDF documents for administrative review before ingestion into the Beats4U cardiovascular knowledge base.
           </p>
         </div>
         <div
@@ -62,8 +62,10 @@ export default function DocumentUpload() {
             setDrag(false);
             select(e.dataTransfer.files?.[0]);
           }}
-          className={`rounded-2xl border-2 border-dashed p-8 text-center transition sm:p-12 ${
-            drag ? 'border-blue-400 bg-blue-50' : 'border-slate-300 bg-white'
+          className={`rounded-3xl border-2 border-dashed p-8 text-center transition sm:p-12 ${
+            drag
+              ? 'border-blue-500 bg-blue-50/80 dark:bg-blue-950/60'
+              : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900'
           }`}
         >
           <input
@@ -73,24 +75,24 @@ export default function DocumentUpload() {
             className="hidden"
             onChange={e => select(e.target.files?.[0])}
           />
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-xl">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 text-2xl text-slate-700 dark:text-slate-300 shadow-sm">
             ↑
           </div>
-          <h2 className="mt-4 font-semibold text-slate-900">Drop a PDF here</h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <h2 className="mt-4 font-bold text-slate-900 dark:text-white">Drop a PDF here</h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             or select a document from your computer
           </p>
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="mt-5 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            className="mt-5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm"
           >
             Select PDF
           </button>
           {file && (
-            <div className="mx-auto mt-6 max-w-md rounded-xl border border-blue-100 bg-blue-50 p-3 text-left text-sm text-blue-800">
-              <div className="font-medium">Selected document</div>
-              <div className="mt-1 truncate">{file.name}</div>
+            <div className="mx-auto mt-6 max-w-md rounded-2xl border border-blue-200 dark:border-blue-800 bg-blue-50/80 dark:bg-blue-950/60 p-4 text-left text-sm text-blue-900 dark:text-blue-200">
+              <div className="font-semibold">Selected document</div>
+              <div className="mt-1 truncate font-mono">{file.name}</div>
             </div>
           )}
         </div>
@@ -99,13 +101,13 @@ export default function DocumentUpload() {
             type="button"
             disabled={!file || loading}
             onClick={() => void submit()}
-            className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-500 px-6 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40 shadow-md transition"
           >
             {loading ? 'Uploading…' : 'Upload Document'}
           </button>
         </div>
         {error && (
-          <div className="mt-6 rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+          <div className="mt-6 rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/60 p-4 text-sm text-rose-700 dark:text-rose-300">
             {error}
           </div>
         )}

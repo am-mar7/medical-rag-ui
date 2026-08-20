@@ -153,13 +153,13 @@ export default function ChatThread() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] flex-col md:min-h-screen">
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col md:min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
       {/* Header Bar */}
-      <div className="border-b border-slate-200 bg-white px-4 py-5 sm:px-6 lg:px-10">
+      <div className="border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 px-4 py-4 sm:px-6 lg:px-10 backdrop-blur">
         <div className="mx-auto max-w-4xl flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-lg font-semibold text-slate-950">Medical Q&amp;A</h1>
-            <p className="mt-1 text-sm text-slate-500">
+            <h1 className="text-lg font-bold text-slate-950 dark:text-white">Medical Q&amp;A</h1>
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
               Ask questions and review the evidence behind each answer.
             </p>
           </div>
@@ -168,7 +168,7 @@ export default function ChatThread() {
           {personalMemories.length > 0 && (
             <button
               onClick={() => setShowMemoriesDrawer(!showMemoriesDrawer)}
-              className="flex items-center gap-2 rounded-xl border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+              className="flex items-center gap-2 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/70 px-3 py-1.5 text-xs font-medium text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors"
             >
               <span>🧠</span>
               <span>
@@ -181,14 +181,14 @@ export default function ChatThread() {
 
         {/* Collapsible Active Memories Drawer */}
         {showMemoriesDrawer && personalMemories.length > 0 && (
-          <div className="mx-auto max-w-4xl mt-3 rounded-2xl border border-blue-100 bg-blue-50/70 p-4">
+          <div className="mx-auto max-w-4xl mt-3 rounded-2xl border border-blue-200 dark:border-blue-800/80 bg-blue-50/80 dark:bg-blue-950/50 p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-blue-900 uppercase tracking-wider">
+              <span className="text-xs font-bold text-blue-900 dark:text-blue-300 uppercase tracking-wider">
                 Saved Personal Context (Sent with future chats):
               </span>
               <button
                 onClick={clearPersonalMemories}
-                className="text-xs font-medium text-rose-600 hover:underline"
+                className="text-xs font-medium text-rose-600 dark:text-rose-400 hover:underline"
               >
                 Clear All Context
               </button>
@@ -197,7 +197,7 @@ export default function ChatThread() {
               {personalMemories.map((mem, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-1.5 rounded-lg border border-blue-200 bg-white px-2.5 py-1 text-xs text-slate-700 shadow-sm"
+                  className="flex items-center gap-1.5 rounded-lg border border-blue-200 dark:border-blue-800 bg-white dark:bg-slate-800 px-2.5 py-1 text-xs text-slate-800 dark:text-slate-200 shadow-sm"
                 >
                   <span>{mem}</span>
                   <button
@@ -218,25 +218,25 @@ export default function ChatThread() {
         {messages.length === 0 ? (
           <div className="mx-auto flex min-h-[55vh] max-w-4xl items-center justify-center px-6 text-center">
             <div>
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-blue-100 bg-blue-50 text-xl text-blue-600 shadow-sm">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/80 text-2xl text-blue-600 dark:text-blue-400 shadow-sm">
                 ✦
               </div>
-              <h2 className="text-xl font-semibold text-slate-900">Ask a medical question</h2>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Ask a medical question</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-400">
                 Answers are grounded in your uploaded documents and include evidence citations when available.
               </p>
-              
+
               {/* Sample personal question suggestion pills */}
               <div className="mt-6 flex flex-wrap justify-center gap-2 max-w-lg mx-auto">
                 <button
                   onClick={() => handleUserSubmit("I am 45 years old with hypertension (165/105). What lifestyle changes are recommended?")}
-                  className="rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-600 hover:border-blue-300 hover:bg-blue-50/50 transition"
+                  className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3.5 py-2 text-xs text-slate-700 dark:text-slate-300 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-slate-800 transition shadow-sm"
                 >
                   💡 &quot;I am 45 years old with hypertension (165/105)...&quot;
                 </button>
                 <button
                   onClick={() => handleUserSubmit("What are the primary WHO guidelines for blood pressure management?")}
-                  className="rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-600 hover:border-blue-300 hover:bg-blue-50/50 transition"
+                  className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3.5 py-2 text-xs text-slate-700 dark:text-slate-300 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-slate-800 transition shadow-sm"
                 >
                   💡 &quot;What are WHO guidelines for blood pressure management?&quot;
                 </button>
@@ -260,7 +260,7 @@ export default function ChatThread() {
 
         {error && (
           <div className="mx-auto max-w-4xl px-4 pb-4 sm:px-6 lg:px-10 mt-4">
-            <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+            <div className="rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/50 p-3 text-sm text-rose-700 dark:text-rose-300">
               {error}
             </div>
           </div>
